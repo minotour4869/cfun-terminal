@@ -18,17 +18,17 @@ class CodeFun:
 		
 		opt = Options()
 		opt.add_argument("--headless")
-		self.client = webdriver.Chrome(options=opt);
+		self.client = webdriver.Chrome(options=opt)
 	
 	def login_read(self):
 		username = input("Username: ")
 		self.username = username
 		password = getpass.getpass()
 		self.password = password
+		print("Logging in, please stand still...")
 		return username, password
 		
 	def login(self):
-		print("Logging, please stand still...")
 		self.client.get(LOGIN_URL)
 		
 		browser_handle = self.client.find_element_by_xpath('//*[@placeholder="Username"]')
@@ -52,30 +52,43 @@ class CodeFun:
 			return False
 		except:
 			return True
-			
+
 	def checkprob(self, prob):
-		self.client.get(PROBLEM_URL + self.prob)
+		self.client.get(PROBLEM_URL + prob)
+		# Wait for the page to load..
+		while 1:
+			try:
+				self.client.find_element_by_xpath('//*[@class="col-md-3"]')
+				# self.client.find_element_by_tag_name("code")
+				break
+			except:
+				continue
+		time.sleep(1)
+
 		try:
 			self.client.find_element_by_tag_name("code")
 			return False
 		except:
 			return True
 			
-	def checklang(self, ext):
-		if lang in ["cpp", "pas", "java", "py", "go"]: return True
+	def checklang(self, lang2):
+		if lang2 in [".cpp", ".pas", ".java", ".py", ".go"]: return True
 		return False
 		
 	def lang(self, ext):
-		if ext == "cpp": return "C++"
-		elif ext == "pas": return "Pascal"
-		elif ext == "java": return "Java"
-		elif ext == "py" or ext == "pypy":
+		if ext == ".cpp": return "C++"
+		elif ext == ".pas": return "Pascal"
+		elif ext == ".java": return "Java"
+		elif ext == ".py" or ext == ".pypy":
 			ver = input("Python ver: ")
 			return "Python " + ver
-		elif ext == "go": return "Go"
+		elif ext == ".go": return "Go"
 			
 	def submit(self, file_path, prob, lang):
+		print("ok desu")
 		self.client.get(SUBMIT_URL)
+		# Wait for the page to be loaded.
+
 		try:
 			ace_prob = self.client.find_element_by_xpath('//*[@placeholder="Pxxxxx"]')
 			ace_prob.send_key(self.prob)
@@ -84,7 +97,7 @@ class CodeFun:
 			ace_content = self.client.find_element_by_xpath('//*[@class="ace_text-input"]')
 			ace_submit = browser_submit = self.client.find_element_by_xpath('//*[@type="submit"]')
 			
-			with open(file_path, "r") as file:
+			with open(file_path, 'r') as file:
 				subs = clipboard.copy(file.read())
 				act = ActionChains(self.client())
 				
@@ -98,14 +111,18 @@ class CodeFun:
 			print("Submiting problem " + ace_prob + " with user " + self.username + "...")
 			
 			problemTitle=self.client.title
-			while problemTitle == 'Submit - Codefun.VN': problemTitle=self.client.title
+			# while problemTitle == 'Submit - Codefun.VN': problemTitle=self.client.title
+			currentURL=self.client.current_url
+			while currentURL == 'https://codefun.vn/submit/': currentURL=self.client.current_url
 			
 			while 1:
 				try:
+					print("Judging...",end='\r')
 					self.client.find_element_by_xpath('//*[@class="submission-running"]')
 				except:
-					print("Judge completed.")
-					print("Judging status: " + self.client.find_element_by_xpath('//*[@class="submission-*"]'))
+					print("Judge completed.",end='\n')
+					print("Judge Status: " + self.client.find_element_by_xpath('//*[@class="submission-*"]'))
 					break
 		except:
-			return err
+			print("not ok desu")
+			return False
