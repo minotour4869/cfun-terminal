@@ -13,3 +13,4 @@ def login_set(username=None):
 	if error is None:
 		print(err.SUCCESS + "Logged to " + c.username)
 	else: print(err.ERROR + error)
+	c.client.quit()

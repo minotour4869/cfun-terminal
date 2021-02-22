@@ -26,6 +26,7 @@ class CodeFun:
 		# opt.add_argument("--headless")
 		opt.add_argument("--log-level=3")
 		self.client = Chrome(options=opt)
+		self.client.minimize_window()
 	
 	def get_saved_info(self, incpass=True):
 		username = None
@@ -170,7 +171,8 @@ class CodeFun:
 				act.click(ace_submit)
 				
 				act.perform()
-	
+		
+		
 		time.sleep(1)
 		
 		# Check cooldown

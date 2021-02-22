@@ -27,3 +27,4 @@ def submit(file_path, prob, relogin=False):
 	else:
 		print(err.SUCCESS + "Judging completed!")
 		print("Status: " + status)
+	c.client.quit()
