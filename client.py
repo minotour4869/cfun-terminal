@@ -198,8 +198,10 @@ class CodeFun:
 				self.client.find_element_by_xpath('//span[@class="submission-running"]')
 				continue
 			except: break
+			
+		time.sleep(1)
 		
 		status_span = self.client.find_elements_by_xpath('//span')
 		for item in status_span:
-			if "submission" in item.get_attribute('class'):
+			if "submission-" in item.get_attribute('class'):
 				return item.get_attribute('innerHTML'), None
