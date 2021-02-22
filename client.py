@@ -2,16 +2,20 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.keys import Keys
 import getpass
 import base64
 import os
 import sys
 import time
 import clipboard
+import err, str
 
 LOGIN_URL = "https://codefun.vn/"
 SUBMIT_URL = "https://codefun.vn/submit/"
 PROBLEM_URL = "https://codefun.vn/problems/"
+
+CONFIG_DIRECTORY = os.path.expanduser("~") + '\\.cfun'
 
 class CodeFun:
 	def __init__(self, username, password):
@@ -19,94 +23,183 @@ class CodeFun:
 		self.password = password
 		
 		opt = Options()
-		opt.add_argument("--headless")
+		# opt.add_argument("--headless")
+		opt.add_argument("--log-level=3")
 		self.client = Chrome(options=opt)
 	
-	def get_saved_info(incpass):
-		username, password = None
-		info_dir = os.path.join(os.path.dirname(__file__), "secret")
+	def get_saved_info(self, incpass=True):
+		username = None
+		password = None
+		# print("ok")
+		info_dir = os.path.join(CONFIG_DIRECTORY + '\\seasions', "info")
 		if os.path.isfile(info_dir):
 			info = open(info_dir, "r")
 			data = info.read().rstrip('\n').split()
-			username, password = base64.b64decode(data[0:])
-		return (username, password if incpass else username)
-	
-	def login_set(self, username=None):
-		# Input user information
-		if username is None or self.username is None:
-			self.username = input("Username: ")
-		else:
-			self.username = username
-		self.password = getpass.getpass("Password (Hidden): ")
-		
-		# Login via selenium
-		self.client.open(LOGIN_URL)
-		
-		try:
-			user_field = self.client.find_element_by_xpath('//*[@placeholder="Username"]')
-			pass_field = self.client.find_element_by_xpath('//*[@placeholder="Password"]')
-			submit = self.client.find_element_by_xpath('//*[@type="Submit"]')
-		except Exception as err:
-			print("Failed to connect site\n" + err)
-			self.client.close()
-			return
-		
-		user_field.send_keys(self.username)
-		pass_field.send_keys(password)
-		submit.click()
-		
-		# Wait for server respond
-		while True:
-			try:
-				self.client.find_element_by_class_name('panel panel-primary')
-				break
-			except: pass
-		
-		# Check for success
-		try:
-			self.client.find_element_by_xpath('//*[@role="Alert"]')
-			print("Invalid credentials")
-			self.client.close()
-			return
-		except:
-			info_dir = os.path.join(os.path.dirname(__file__), "secret")
-			info = open(info_dir, "w")
-			info.write(base64.b64encode(username) + ' ' + base64.b64encode(password))
+			username = str.decode(data[0])
+			password = str.decode(data[1])
 			info.close()
-			print("Success logged to " + username)
-			
-	def login(self):
+		# print("ok")
+		self.username = username
+		if incpass: self.password = password
+	
+	def login(self, get_saved_info=False):
 		# Input user information
-		self.username, self.password = self.get_saved_info(True)
+		if get_saved_info: self.get_saved_info(True)
+		if self.username == None:
+			return err.NL
+		# print("get info with")
+		# print(self.username)
+		# print(self.password)
 		
 		# Login via selenium
-		self.client.open(LOGIN_URL)
-		
-		try:
-			user_field = self.client.find_element_by_xpath('//*[@placeholder="Username"]')
-			pass_field = self.client.find_element_by_xpath('//*[@placeholder="Password"]')
-			submit = self.client.find_element_by_xpath('//*[@type="Submit"]')
-		except Exception as err:
-			print("Failed to connect site\n" + err)
-			self.client.close()
-			return
-		
-		user_field.send_keys(self.username)
-		pass_field.send_keys(password)
-		submit.click()
+		self.client.get(LOGIN_URL)
 		
 		# Wait for server respond
 		while True:
 			try:
-				self.client.find_element_by_class_name('panel panel-primary')
+				self.client.find_element_by_xpath('//*[@class="panel-heading"]')
 				break
 			except: pass
 		
-		# Check for success
 		try:
-			self.client.find_element_by_xpath('//*[@role="Alert"]')
-			print("Login corrupted.")
-			self.client.close()
-			return
+			user_field = self.client.find_element_by_xpath('//*[@placeholder="Username"]')
+			user_field.send_keys(self.username)
+			pass_field = self.client.find_element_by_xpath('//*[@placeholder="Password"]')
+			pass_field.send_keys(self.password)
+			submit = self.client.find_element_by_xpath('//*[@type="submit"]')
+			submit.click()
 		except:
-			pass
+			self.client.quit()
+			return err.WF
+
+		# Wait for server respond
+		while True:
+			try:
+				self.client.find_element_by_xpath('//*[@class="panel-heading"]')
+				break
+			except: pass
+			
+		time.sleep(1)
+		
+		# Check for success
+		# try:
+			# self.client.find_element_by_xpath('//*[@class="alert alert-danger"]')
+			# self.client.quit()
+			# return err.LC
+		# except:x
+			# if not get_saved_info:
+				# info_dir = os.path.join(CONFIG_DIRECTORY + '\\seasions', "info")
+				# info = open(info_dir, "w")
+				# euser = str.encode(self.username)
+				# epass = str.encode(self.password)
+				# info.write(euser + ' ' + epass)
+				# info.close()
+		
+		try:
+			t = self.client.find_element_by_xpath('//*[@class="list-group"]')
+			if not get_saved_info:
+				info_dir = os.path.join(CONFIG_DIRECTORY + '\\seasions', "info")
+				info = open(info_dir, "w")
+				euser = str.encode(self.username)
+				epass = str.encode(self.password)
+				info.write(euser + ' ' + epass)
+				info.close()
+		except:
+			return err.LC
+		# print("ok")
+			
+	def checkprob(self, prob):
+		# Check problem is valid or not, by finding its page
+		self.client.get(PROBLEM_URL + prob)
+		
+		# Wait for server respond
+		while True:
+			try:
+				self.client.find_element_by_xpath('//*[@class="panel panel-primary"]')
+				break
+			except: pass
+			
+		try:
+			self.client.find_element_by_tag_name("code")
+			return False
+		except:
+			return True
+			
+	def checkfile(self, file):
+		ext = file[file.find('.'):]
+		if ext in [".cpp", ".pas", ".java", ".py", ".go"]: return True
+		return False
+		
+	def lang(self, file):
+		ext = file[file.find('.'):]
+		if ext == ".cpp": return "C++"
+		elif ext == ".pas": return "Pascal"
+		elif ext == ".java": return "Java"
+		elif ext == ".py" or ext == ".pypy":
+			ver = input("Python ver: ")
+			return "Python " + ver
+		elif ext == ".go": return "Go"
+		
+	def submit(self, file_path, prob):
+		# Navigating to the submit page
+		self.client.get(SUBMIT_URL)
+		
+		# Wait for server respond
+		while True:
+			try:
+				self.client.find_element_by_xpath('//*[@class="panel panel-primary"]')
+				break
+			except: pass
+		# print("ok")
+			
+		# Prepare
+		ace_prob = self.client.find_element_by_xpath('//*[@placeholder="Pxxxxx"]')
+		ace_prob.send_keys(prob)
+		ace_lang = Select(self.client.find_element_by_tag_name("select"))
+		ace_lang.select_by_visible_text(self.lang(file_path))
+		ace_content = self.client.find_element_by_xpath('//*[@class="ace_text-input"]')
+		ace_submit = browser_submit = self.client.find_element_by_xpath('//*[@type="submit"]')
+		
+		with open(file_path, 'r') as file:
+				subs = clipboard.copy(file.read())
+				act = ActionChains(self.client)
+				
+				# Click to the field, Ctrl + V, yea, u know .-.
+				act.click(ace_content)
+				act.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL)
+				act.click(ace_submit)
+				
+				act.perform()
+	
+		time.sleep(1)
+		
+		# Check cooldown
+		try:
+			self.client.find_element_by_xpath('//*[@role="alert"]')
+			self.client.quit()
+			return None, err.SCD
+		except: pass
+		
+		# Submit
+		print("Submiting problem " + prob + " with user " + self.username + "...")
+		# print("ok")
+		
+		# Wait for server respond
+		while True:
+			try:
+				self.client.find_element_by_xpath('//*[@class="col-md-4"]')
+				break
+			except: pass
+		
+		#Judge and get result	
+		print("")
+		while True:
+			try:
+				self.client.find_element_by_xpath('//span[@class="submission-running"]')
+				continue
+			except: break
+		
+		status_span = self.client.find_elements_by_xpath('//span')
+		for item in status_span:
+			if "submission" in item.get_attribute('class'):
+				return item.get_attribute('innerHTML'), None
