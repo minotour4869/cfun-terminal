@@ -3,12 +3,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
-import getpass
-import base64
-import os
-import sys
-import time
-import clipboard
+import getpass, base64, os, sys, time, clipboard, re
 import err, str
 
 LOGIN_URL = "https://codefun.vn/"
@@ -21,6 +16,13 @@ class CodeFun:
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
+		self.lastsub = None
+		self.substatus = None
+		self.subruntime = None
+		self.subtime = None
+		self.submemory = None
+		self.prob = None
+		self.sublang = None
 		
 		opt = Options()
 		# opt.add_argument("--headless")
@@ -142,6 +144,9 @@ class CodeFun:
 		elif ext == ".go": return "Go"
 		
 	def submit(self, file_path, prob):
+		self.prob = prob
+		self.sublang = self.lang(file_path)
+		
 		# Navigating to the submit page
 		self.client.get(SUBMIT_URL)
 		
@@ -157,10 +162,11 @@ class CodeFun:
 		ace_prob = self.client.find_element_by_xpath('//*[@placeholder="Pxxxxx"]')
 		ace_prob.send_keys(prob)
 		ace_lang = Select(self.client.find_element_by_tag_name("select"))
-		ace_lang.select_by_visible_text(self.lang(file_path))
+		ace_lang.select_by_visible_text(self.sublang)
 		ace_content = self.client.find_element_by_xpath('//*[@class="ace_text-input"]')
 		ace_submit = browser_submit = self.client.find_element_by_xpath('//*[@type="submit"]')
 		
+		self.client.maximize_window()
 		with open(file_path, 'r') as file:
 				subs = clipboard.copy(file.read())
 				act = ActionChains(self.client)
@@ -171,7 +177,7 @@ class CodeFun:
 				act.click(ace_submit)
 				
 				act.perform()
-		
+		self.client.minimize_window()
 		
 		time.sleep(1)
 		
@@ -179,7 +185,7 @@ class CodeFun:
 		try:
 			self.client.find_element_by_xpath('//*[@role="alert"]')
 			self.client.quit()
-			return None, err.SCD
+			return err.SCD
 		except: pass
 		
 		# Submit
@@ -203,7 +209,17 @@ class CodeFun:
 			
 		time.sleep(1)
 		
+		for sub in re.findall(r'\d+', self.client.current_url): self.lastsub = sub
 		status_span = self.client.find_elements_by_xpath('//span')
 		for item in status_span:
 			if "submission-" in item.get_attribute('class'):
-				return item.get_attribute('innerHTML'), None
+				self.substatus = item.get_attribute('innerHTML')
+				break
+		info = self.client.find_elements_by_xpath('.//b')
+		cnt = 0
+		for item in info:
+			if cnt == 2: self.subruntime = item.get_attribute('innerHTML')
+			elif cnt == 3: self.subtime = item.get_attribute('innerHTML')
+			elif cnt >= 4: break
+			cnt += 1
+		
