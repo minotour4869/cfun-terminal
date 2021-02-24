@@ -9,6 +9,7 @@ import err, str
 LOGIN_URL = "https://codefun.vn/"
 SUBMIT_URL = "https://codefun.vn/submit/"
 PROBLEM_URL = "https://codefun.vn/problems/"
+PROFILE_URL = "https://codefun.vn/profile/"
 
 CONFIG_DIRECTORY = os.path.expanduser("~") + '\\.cfun'
 
@@ -23,6 +24,8 @@ class CodeFun:
 		self.submemory = None
 		self.prob = None
 		self.sublang = None
+		self.owner = ''
+		self.rank = ''
 		
 		opt = Options()
 		# opt.add_argument("--headless")
@@ -107,6 +110,17 @@ class CodeFun:
 				epass = str.encode(self.password)
 				info.write(euser + ' ' + epass)
 				info.close()
+			self.client.get(PROFILE_URL + self.username)
+			time.sleep(1)
+			cnt = 0
+			status_span = self.client.find_elements_by_xpath('//span')
+			for item in status_span:
+				if cnt == 4:
+					sinfo = item.get_attribute('title').split()
+					for i in sinfo:
+						if i == sinfo[0]: self.rank = i
+						else: self.owner += (i + ' ')
+					break
 		except:
 			return err.LC
 		# print("ok")

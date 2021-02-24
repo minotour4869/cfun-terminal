@@ -35,10 +35,10 @@ def submit(file_path, prob, relogin=False):
 		return
 	else:
 		print(err.SUCCESS + "Judging completed for submission " + c.lastsub + "!\n")
-		print("\tProblem: " + c.prob)
-		print("\tUser: " + c.username)
-		print("\tLanguage: " + c.sublang)
-		print("\tSubmit time: " + c.subtime)
-		print("\tStatus: " + style(c.substatus))
+		print("\t     Problem: " + c.prob)
+		print("\t        Owner: " + c.owner)
+		print("\t    Language: " + c.sublang)
+		print("\t Submit time: " + c.subtime)
+		print("\t      Status: " + style(c.substatus))
 		print("\tRunning time: " + c.subruntime)
 	c.client.quit()
