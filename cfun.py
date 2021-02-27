@@ -1,4 +1,4 @@
-import submit, login, status
+import submit, login
 import argparse, os, sys, subprocess
 
 CONFIG_DIRECTORY = os.path.expanduser("~") + '\\.cfun'

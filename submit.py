@@ -1,15 +1,6 @@
 from client import CodeFun as client
-import err, str, login
+import err, str, login, styles
 import os
-
-def style(status):
-	if status == 'Accepted': return '\033[32m' + status + '\033[0m'
-	elif 'Score ' in status: return '\033[92m' + status + '\033[0m'
-	elif status == 'Wrong Answer': return '\033[31m' + status + '\033[0m'
-	elif status == 'Compile Error': return '\033[90m' + status + '\033[0m'
-	elif status == 'Time Limit Exceeded': return '\033[33m' + status + '\033[0m'
-	elif status == 'Memory Limit Exceeded': return '\033[33m' + status + '\033[0m'
-	elif status == 'Runtime Error': return '\033[34m' + status + '\033[0m'
 
 def submit(file_path, prob, relogin=False):
 	os.system('color')
@@ -36,9 +27,9 @@ def submit(file_path, prob, relogin=False):
 	else:
 		print(err.SUCCESS + "Judging completed for submission " + c.lastsub + "!\n")
 		print("\t     Problem: " + c.prob)
-		print("\t        Owner: " + c.owner)
+		print("\t       Owner: " + styles.rank(c.owner, c.rank))
 		print("\t    Language: " + c.sublang)
 		print("\t Submit time: " + c.subtime)
-		print("\t      Status: " + style(c.substatus))
+		print("\t      Status: " + styles.status(c.substatus))
 		print("\tRunning time: " + c.subruntime)
 	c.client.quit()

@@ -13,6 +13,8 @@ PROFILE_URL = "https://codefun.vn/profile/"
 
 CONFIG_DIRECTORY = os.path.expanduser("~") + '\\.cfun'
 
+ranklist = ['Newbie', 'Novice', 'Coder', 'Expert', 'Master', 'Hacker', 'Grandmaster']
+
 class CodeFun:
 	def __init__(self, username, password):
 		self.username = username
@@ -115,11 +117,11 @@ class CodeFun:
 			cnt = 0
 			status_span = self.client.find_elements_by_xpath('//span')
 			for item in status_span:
-				if cnt == 4:
-					sinfo = item.get_attribute('title').split()
-					for i in sinfo:
-						if i == sinfo[0]: self.rank = i
-						else: self.owner += (i + ' ')
+				ele = item.get_attribute('title').split()
+				if ele and ele[0] in ranklist:
+					for p in ele:
+						if p == ele[0]: self.rank = p
+						else: self.owner += p + ' '
 					break
 		except:
 			return err.LC
@@ -178,7 +180,7 @@ class CodeFun:
 		ace_lang = Select(self.client.find_element_by_tag_name("select"))
 		ace_lang.select_by_visible_text(self.sublang)
 		ace_content = self.client.find_element_by_xpath('//*[@class="ace_text-input"]')
-		ace_submit = browser_submit = self.client.find_element_by_xpath('//*[@type="submit"]')
+		ace_submit = self.client.find_element_by_xpath('//*[@type="submit"]')
 		
 		self.client.maximize_window()
 		with open(file_path, 'r') as file:
