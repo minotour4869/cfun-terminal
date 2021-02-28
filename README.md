@@ -1,6 +1,6 @@
 # CodeFun-Terminal
 
-Codefun Terminal là một dự án nhỏ cho một script để submit, lấy thông tin và parse problem trên (codefun.vn).
+Codefun Terminal là một dự án nhỏ cho một script để submit, lấy thông tin và parse problem trên [codefun.vn](https://codefun.vn/).
 Project được làm bởi Python. UwU
 
 Hiện tại project đang ở giai đoạn beta, và mình mới chỉ thử nghiệm trên Windows. Nếu gặp bất cứ khó khăn gì (bug, chức năng...), hãy cứ tự nhiên hỏi mình. Mình luôn sẵn sàng giúp đỡ các bạn.
