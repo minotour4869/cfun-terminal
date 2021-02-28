@@ -3,6 +3,8 @@
 CodeFun-Terminal is a small project to parse, submit CodeFun problems and get user infomation.
 Project is made by Python. UwU
 
+Currently project is in beta version. If you occur any problem about my project (bug, feature...), feel free to ask me. You are welcome.
+
 ```
 ░█████╗░███████╗░░░░░░████████╗███████╗██████╗░███╗░░░███╗██╗███╗░░██╗░█████╗░██╗░░░░░
 ██╔══██╗██╔════╝░░░░░░╚══██╔══╝██╔════╝██╔══██╗████╗░████║██║████╗░██║██╔══██╗██║░░░░░
@@ -23,7 +25,7 @@ Project is made by Python. UwU
 5. Run the following command (when you installed Python and PIP configured properly)
 `pip install -r requirements.txt`
 
-## USAGE
+## BINARY FILE AND USAGE
 
 Coming soon... :P
 
