@@ -1,9 +1,9 @@
 # CodeFun-Terminal
 
-Codefun Terminal is a small project to parse, submit CodeFun problems and get user infomation.
-Project is made by Python. UwU
+Codefun Terminal là một dự án nhỏ cho một script để submit, lấy thông tin và parse problem trên (codefun.vn).
+Project được làm bởi Python. UwU
 
-Currently project is in beta version. If you occur any problem about my project (bug, feature...), feel free to ask me. You are welcome.
+Hiện tại project đang ở giai đoạn beta, và mình mới chỉ thử nghiệm trên Windows. Nếu gặp bất cứ khó khăn gì (bug, chức năng...), hãy cứ tự nhiên hỏi mình. Mình luôn sẵn sàng giúp đỡ các bạn.
 
 ```
 ░█████╗░███████╗░░░░░░████████╗███████╗██████╗░███╗░░░███╗██╗███╗░░██╗░█████╗░██╗░░░░░
@@ -16,19 +16,19 @@ Currently project is in beta version. If you occur any problem about my project 
 
 ***
 
-## INSTALLATION
+## Cài đặt
 
-1. Install Python 3.
-2. Clone this Repository or Download as ZIP file and extract it.
-3. Install Chrome driver and add it in your system variables.
-4. (Optimal) Add `cfun.exe` path to your system variables (for easy interaction, i guess?)
-5. Run the following command (when you installed Python and PIP configured properly)
-`pip install -r requirements.txt`
+1. Cài đặt Python 3.
+2. Clone repository này hoặc download về bằng zip.
+3. Cài đặt Chrome driver và thêm vào PATH trên máy tính của các bạn.
+4. (Tùy chọn) Add `cfun.exe` (sẽ thêm sau khi có bin) vào PATH
+5. Chạy câu lệnh sau
+`py -m pip install -r requirements.txt`
 
-## BINARY FILE AND USAGE
+## BINARY FILE VÀ HƯỚNG DẪN
 
-Coming soon... :P
+Sắp có... :P
 
 ##
 
-Thanks [@Legend0fHell](https://github.com/Legend0fHell) for cooperate me in this project. :3
+Cảm ơn [@Legend0fHell](https://github.com/Legend0fHell) rất nhiều trong việc hỗ trợ mình project này nhé. :3
