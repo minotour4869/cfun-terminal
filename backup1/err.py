@@ -1,6 +1,0 @@
-WF = "Failed to connect site!"
-IC = "Invalid credentials!"
-LC = "Login corrupted!"
-IF = "Invalid file!"
-NL = "You haven't logged in yet. Please use 'cfun login' to login."
-IP = "Invalid problem!"
