@@ -1,4 +1,4 @@
-import submit, login
+import submit, login, status
 import argparse, os, sys, subprocess
 
 CONFIG_DIRECTORY = os.path.expanduser("~") + '\\.cfun'
@@ -19,9 +19,9 @@ def main(argv):
 		login.login_set()
 	elif args.command == "submit":
 		submit.submit(args.file, args.problem, False)
-	# elif args.command == "status":
-		
-
+	elif args.command == "status":
+		status.status(args.user)
+	
 if __name__ == '__main__':
 	main(sys.argv[0:])
 	

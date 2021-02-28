@@ -27,7 +27,12 @@ class CodeFun:
 		self.prob = None
 		self.sublang = None
 		self.owner = ''
+		self.group = None
+		self.score = None
+		self.ranking = None
 		self.rank = ''
+		self.acc = None
+		self.atc = None
 		
 		opt = Options()
 		# opt.add_argument("--headless")
@@ -239,3 +244,22 @@ class CodeFun:
 			elif cnt >= 4: break
 			cnt += 1
 		
+	def get_status(self, username):
+		self.client.get(PROFILE_URL + username)
+		time.sleep(1)
+		
+		info = list()
+		
+		s = self.client.find_elements_by_xpath('//li[@class="list-group-item"]')
+		for i in s: info.append(i.find_element_by_xpath('b').get_attribute('innerHTML'))
+		self.owner, self.group, self.score, self.ranking = info
+		
+		table = self.client.find_elements_by_xpath('//table[@class="table table-striped"]')
+		info = list()
+		
+		for i in table:
+			cnt = 0
+			for ele in i.find_elements_by_xpath('tbody/tr'): cnt+=1
+			info.append(cnt)
+		
+		self.acc, self.atc = info
