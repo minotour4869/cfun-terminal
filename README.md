@@ -1,6 +1,6 @@
-# cfun-terminal - Codefun CLI (Command Line Interface)
+# CodeFun-Terminal
 
-CodeFun-Terminal is a small project to parse, submit CodeFun problems and get user infomation.
+Codefun Terminal is a small project to parse, submit CodeFun problems and get user infomation.
 Project is made by Python. UwU
 
 Currently project is in beta version. If you occur any problem about my project (bug, feature...), feel free to ask me. You are welcome.
