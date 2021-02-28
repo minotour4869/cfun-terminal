@@ -27,4 +27,6 @@ Project is made by Python. UwU
 
 Coming soon... :P
 
+##
+
 Thank [@Legend0fHell](https://github.com/Legend0fHell) for cooperate me in this project. :3
