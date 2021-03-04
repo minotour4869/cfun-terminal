@@ -27,7 +27,7 @@ Currently project is in beta version, and only tested on Windows. If you occur a
 
 ## BINARY FILE AND USAGE
 
-Coming soon... :P
+Download from [releases](https://github.com/minotour4869/cfun-terminal/releases), extract and use your terminal.
 
 ##
 
