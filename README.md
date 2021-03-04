@@ -27,7 +27,7 @@ Hiện tại project đang ở giai đoạn beta, và mình mới chỉ thử ng
 
 ## BINARY FILE VÀ HƯỚNG DẪN
 
-Sắp có... :P
+Download từ [release](https://github.com/minotour4869/cfun-terminal/releases), extract, mở cmd và ăn liền. :>
 
 ##
 
